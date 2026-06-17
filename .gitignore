@@ -1,0 +1,41 @@
+
+# Virtual Environment
+venv/
+env/
+ENV/
+*.venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg/
+
+# Streamlit
+.streamlit/
+*.log
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE/Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Data (optional - keep if you want to share, or exclude if large)
+# data/

@@ -1,0 +1,16 @@
+streamlit
+plotly
+pandas
+scikit-learn
+matplotlib
+requests
+numpy
+seaborn
+jupyter
+torch
+torch-geometric
+shap
+stable-baselines3
+gymnasium
+scipy
+joblib
