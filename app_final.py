@@ -117,7 +117,6 @@ def main():
     rf, dnn, pinn, scaler, X_test, y_test = get_trained_models_cached(df)
 
     # Sidebar Navigation
-    st.sidebar.image("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/NASA_logo.svg/240px-NASA_logo.svg.png", width=80)
     st.sidebar.title("🚀 AI Cosmic Intelligence")
     st.sidebar.markdown("---")
     page = st.sidebar.radio(
