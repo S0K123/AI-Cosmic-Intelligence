@@ -36,7 +36,6 @@ st.set_page_config(
 
 # --- NASA-inspired Dark Theme CSS ---
 st.markdown("""
-    &lt;div style="display:none"&gt;
     &lt;style&gt;
     .main { background-color: #0a0e17; color: #e0e6ed; }
     .stApp { background: radial-gradient(circle at 10% 0%, #0f172a 0%, #0a0e17 40%, #050810 100%); }
@@ -58,7 +57,6 @@ st.markdown("""
     .stDataFrame { border-radius: 8px; overflow: hidden; }
     .css-1d391kg { padding-top: 1rem; }
     &lt;/style&gt;
-    &lt;/div&gt;
     """, unsafe_allow_html=True)
 
 
