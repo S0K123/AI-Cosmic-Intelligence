@@ -35,29 +35,53 @@ st.set_page_config(
 )
 
 # --- NASA-inspired Dark Theme CSS ---
-st.markdown("""
+st.markdown(
+    """
     &lt;style&gt;
-    .main { background-color: #0a0e17; color: #e0e6ed; }
-    .stApp { background: radial-gradient(circle at 10% 0%, #0f172a 0%, #0a0e17 40%, #050810 100%); }
-    .stSidebar { background: linear-gradient(180deg, #0f172a 0%, #0a0e17 100%); border-right: 1px solid #1e293b; }
-    .stMetric { background: rgba(30, 41, 59, 0.7); padding: 18px; border-radius: 12px; border-left: 3px solid #00d4ff; }
-    h1, h2, h3, h4 { color: #00d4ff; font-family: 'Segoe UI', sans-serif; }
-    .stButton&gt;button { 
-        background: linear-gradient(90deg, #00d4ff, #0ea5e9); 
-        color: #0a0e17; 
-        font-weight: 700; 
-        border-radius: 8px; 
-        border: none;
-        box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
-    }
-    .stButton&gt;button:hover {
-        box-shadow: 0 6px 20px rgba(0, 212, 255, 0.5);
-        transform: translateY(-1px);
-    }
-    .stDataFrame { border-radius: 8px; overflow: hidden; }
-    .css-1d391kg { padding-top: 1rem; }
+        .main {
+            background-color: #0a0e17;
+            color: #e0e6ed;
+        }
+        .stApp {
+            background: radial-gradient(circle at 10% 0%, #0f172a 0%, #0a0e17 40%, #050810 100%);
+        }
+        .stSidebar {
+            background: linear-gradient(180deg, #0f172a 0%, #0a0e17 100%);
+            border-right: 1px solid #1e293b;
+        }
+        .stMetric {
+            background: rgba(30, 41, 59, 0.7);
+            padding: 18px;
+            border-radius: 12px;
+            border-left: 3px solid #00d4ff;
+        }
+        h1, h2, h3, h4 {
+            color: #00d4ff;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .stButton &gt; button {
+            background: linear-gradient(90deg, #00d4ff, #0ea5e9);
+            color: #0a0e17;
+            font-weight: 700;
+            border-radius: 8px;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+        .stButton &gt; button:hover {
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.5);
+            transform: translateY(-1px);
+        }
+        .stDataFrame {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .css-1d391kg {
+            padding-top: 1rem;
+        }
     &lt;/style&gt;
-    """, unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True
+)
 
 
 # --- Data/Model Loading (Cached) ---
