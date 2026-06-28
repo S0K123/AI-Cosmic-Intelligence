@@ -2,7 +2,7 @@
 def get_three_js_html(planets_data, star_info=None):
     """
     Generates an enhanced HTML/JS for the Three.js 3D Space Simulation.
-    Features: Planet Labels (Sprites), Glowing Orbit Lines, Enhanced Star, Keplerian Motion,
+    Features: Planet labels (Sprites), Glowing Orbit Lines, Enhanced Star, Keplerian Motion,
               Orbit Highlighting, Habitability Colors, Clickable planets, Info Panel.
     planets_data: List of dicts with keys: name, radius, orbit_radius, is_habitable, habitability_score, confidence
     star_info: Optional dict with star info (name, temp, etc.)
@@ -13,9 +13,10 @@ def get_three_js_html(planets_data, star_info=None):
     
     html_template = f"""
     &lt;!DOCTYPE html&gt;
-    &lt;html&gt;
+    &lt;html lang="en"&gt;
     &lt;head&gt;
-        &lt;meta charset="utf-8"&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
         &lt;title&gt;AI Cosmos 3D Simulation&lt;/title&gt;
         &lt;style&gt;
             body {{ margin: 0; background-color: #000; overflow: hidden; font-family: 'Arial', sans-serif; }}
@@ -32,6 +33,7 @@ def get_three_js_html(planets_data, star_info=None):
                 border: 1px solid #00d4ff;
                 box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
                 display: none;
+                z-index: 10;
             }}
             #info-panel h3 {{ margin: 0 0 10px 0; color: #00d4ff; }}
             #info-panel p {{ margin: 5px 0; font-size: 14px; }}
@@ -56,18 +58,17 @@ def get_three_js_html(planets_data, star_info=None):
                 max-width: 250px;
                 border: 1px solid #ffcc33;
                 box-shadow: 0 0 20px rgba(255, 204, 51, 0.3);
+                z-index: 10;
             }}
             #star-panel h3 {{ margin: 0 0 10px 0; color: #ffcc33; }}
         &lt;/style&gt;
     &lt;/head&gt;
     &lt;body&gt;
         &lt;div id="container"&gt;&lt;/div&gt;
-        
         &lt;div id="info-panel"&gt;
             &lt;button id="close-info"&gt;&amp;times;&lt;/button&gt;
             &lt;div id="info-content"&gt;&lt;/div&gt;
         &lt;/div&gt;
-        
         &lt;div id="star-panel"&gt;
             &lt;h3&gt;🌟 Host Star Info&lt;/h3&gt;
             &lt;div id="star-content"&gt;&lt;/div&gt;
@@ -77,11 +78,9 @@ def get_three_js_html(planets_data, star_info=None):
         &lt;script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"&gt;&lt;/script&gt;
         
         &lt;script&gt;
-            // Data passed from Python
             const planetsData = {planets_json};
             const starInfo = {star_json};
 
-            // --- Scene Setup ---
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 5000);
             const renderer = new THREE.WebGLRenderer({{ antialias: true, alpha: true }});
@@ -89,22 +88,18 @@ def get_three_js_html(planets_data, star_info=None):
             renderer.setPixelRatio(window.devicePixelRatio);
             document.getElementById('container').appendChild(renderer.domElement);
 
-            // --- Orbit Controls ---
             const controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.05;
             camera.position.set(0, 80, 150);
             controls.update();
 
-            // --- Lighting ---
             const ambientLight = new THREE.AmbientLight(0x404040, 1.0);
             scene.add(ambientLight);
-
             const sunLight = new THREE.PointLight(0xffffff, 2.5, 2000);
             sunLight.position.set(0, 0, 0);
             scene.add(sunLight);
 
-            // --- The Host Star ---
             const sunGeometry = new THREE.SphereGeometry(10, 64, 64);
             const sunMaterial = new THREE.MeshBasicMaterial({{ color: 0xffcc33 }});
             const sun = new THREE.Mesh(sunGeometry, sunMaterial);
@@ -121,11 +116,10 @@ def get_three_js_html(planets_data, star_info=None):
                 scene.add(glowMesh);
             }}
 
-            // Update star panel info
-            document.getElementById('star-content').innerHTML = Object.keys(starInfo).length &gt; 0 ? 
+            document.getElementById('star-content').innerHTML = Object.keys(starInfo).length ? 
                 `&lt;p&gt;&lt;b&gt;Name:&lt;/b&gt; ${{starInfo.name || 'Unknown'}}&lt;/p&gt;
                  &lt;p&gt;&lt;b&gt;Temperature:&lt;/b&gt; ${{starInfo.temp ? starInfo.temp.toFixed(0) : 'Unknown'}} K&lt;/p&gt;
-                 &lt;p&gt;&lt;b&gt;Luminosity:&lt;/b&gt; ${{starInfo.luminosity ? starInfo.luminosity.toFixed(2) : 'Unknown'}} L☉&lt;/p&gt;`
+                 &lt;p&gt;&lt;b&gt;Luminosity:&lt;/b&gt; ${{starInfo.luminosity ? starInfo.luminosity.toFixed(2) : 'Unknown'}} L☉&lt;/p&gt;` 
                  : '&lt;p&gt;Star info not available.&lt;/p&gt;';
 
             function createTextTexture(text) {{
@@ -140,7 +134,6 @@ def get_three_js_html(planets_data, star_info=None):
                 ctx.font = 'Bold 60px Arial';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                
                 ctx.shadowColor = 'black';
                 ctx.shadowBlur = 10;
                 ctx.fillStyle = 'white';
@@ -217,10 +210,7 @@ def get_three_js_html(planets_data, star_info=None):
             const starMat = new THREE.PointsMaterial({{ color: 0xffffff, size: 0.2, transparent: true, opacity: 0.8 }});
             const starVerts = [];
             for (let i = 0; i &lt; 10000; i++) {{
-                const x = (Math.random() - 0.5) * 3000;
-                const y = (Math.random() - 0.5) * 3000;
-                const z = (Math.random() - 0.5) * 3000;
-                starVerts.push(x, y, z);
+                starVerts.push((Math.random() - 0.5) * 3000, (Math.random() - 0.5) * 3000, (Math.random() - 0.5) * 3000);
             }}
             starGeom.setAttribute('position', new THREE.Float32BufferAttribute(starVerts, 3));
             const stars = new THREE.Points(starGeom, starMat);
@@ -229,8 +219,9 @@ def get_three_js_html(planets_data, star_info=None):
             let selectedPlanet = null;
 
             window.addEventListener('mousemove', (event) =&gt; {{
-                mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-                mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+                const rect = renderer.domElement.getBoundingClientRect();
+                mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+                mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
             }});
 
             window.addEventListener('click', (event) =&gt; {{
