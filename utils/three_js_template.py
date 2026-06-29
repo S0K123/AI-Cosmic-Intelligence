@@ -5,32 +5,22 @@ import json
 def get_three_js_html(planets_data, star_info=None):
     """
     Generates HTML/JS for Three.js 3D Space Simulation
+    planets_data: List of dicts with keys: name, radius, orbit_radius, is_habitable
+    star_info: Optional dict with star info
     """
     planets_json = json.dumps(planets_data)
-    star_json = json.dumps(star_info or {})
+    star_info_data = star_info or {"name": "Host Star", "temp": 5778, "luminosity": 1.0}
+    star_json = json.dumps(star_info_data)
 
-    return f"""
-&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
-&lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
-    &lt;title&gt;AI Cosmos 3D Simulation&lt;/title&gt;
-    &lt;style&gt;
-        html, body {{
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            overflow: hidden;
-            font-family: 'Arial', sans-serif;
-        }}
-        canvas {{
-            width: 100%;
-            height: 100%;
-            display: block;
-        }}
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Cosmos 3D Simulation</title>
+    <style>
+        html, body {{ margin: 0; padding: 0; width: 100%; height: 100%; background-color: #000; overflow: hidden; font-family: Arial, sans-serif; }}
+        canvas {{ width: 100%; height: 100%; display: block; }}
         #info-panel {{
             position: absolute;
             top: 10px;
@@ -45,15 +35,8 @@ def get_three_js_html(planets_data, star_info=None):
             display: none;
             z-index: 100;
         }}
-        #info-panel h3 {{
-            margin: 0 0 12px 0;
-            color: #00d4ff;
-        }}
-        #info-panel p {{
-            margin: 6px 0;
-            font-size: 14px;
-            line-height: 1.5;
-        }}
+        #info-panel h3 {{ margin: 0 0 12px 0; color: #00d4ff; }}
+        #info-panel p {{ margin: 6px 0; font-size: 14px; line-height: 1.5; }}
         #close-info {{
             position: absolute;
             top: 8px;
@@ -78,26 +61,23 @@ def get_three_js_html(planets_data, star_info=None):
             box-shadow: 0 0 20px rgba(255, 204, 51, 0.35);
             z-index: 100;
         }}
-        #star-panel h3 {{
-            margin: 0 0 12px 0;
-            color: #ffcc33;
-        }}
-    &lt;/style&gt;
-&lt;/head&gt;
-&lt;body&gt;
-    &lt;div id="container"&gt;&lt;/div&gt;
-    &lt;div id="info-panel"&gt;
-        &lt;button id="close-info"&gt;&amp;times;&lt;/button&gt;
-        &lt;div id="info-content"&gt;&lt;/div&gt;
-    &lt;/div&gt;
-    &lt;div id="star-panel"&gt;
-        &lt;h3&gt;🌟 Host Star Info&lt;/h3&gt;
-        &lt;div id="star-content"&gt;&lt;/div&gt;
-    &lt;/div&gt;
+        #star-panel h3 {{ margin: 0 0 12px 0; color: #ffcc33; }}
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <div id="info-panel">
+        <button id="close-info">&amp;times;</button>
+        <div id="info-content"></div>
+    </div>
+    <div id="star-panel">
+        <h3>🌟 Host Star Info</h3>
+        <div id="star-content"></div>
+    </div>
 
-    &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"&gt;&lt;/script&gt;
-    &lt;script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"&gt;&lt;/script&gt;
-    &lt;script&gt;
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script>
         const planetsData = {planets_json};
         const starInfo = {star_json};
 
@@ -120,7 +100,6 @@ def get_three_js_html(planets_data, star_info=None):
         sunLight.position.set(0, 0, 0);
         scene.add(sunLight);
 
-        // Add Sun
         const sunGeometry = new THREE.SphereGeometry(10, 64, 64);
         const sunMaterial = new THREE.MeshBasicMaterial({{ color: 0xffcc33 }});
         const sun = new THREE.Mesh(sunGeometry, sunMaterial);
@@ -137,12 +116,11 @@ def get_three_js_html(planets_data, star_info=None):
             scene.add(glowMesh);
         }}
 
-        // Update Star Panel
-        document.getElementById('star-content').innerHTML = Object.keys(starInfo).length ?
-            `&lt;p&gt;&lt;b&gt;Name:&lt;/b&gt; ${{starInfo.name || 'Unknown'}}&lt;/p&gt;
-             &lt;p&gt;&lt;b&gt;Temperature:&lt;/b&gt; ${{starInfo.temp ? starInfo.temp.toFixed(0) : 'Unknown'}} K&lt;/p&gt;
-             &lt;p&gt;&lt;b&gt;Luminosity:&lt;/b&gt; ${{starInfo.luminosity ? starInfo.luminosity.toFixed(2) : 'Unknown'}} L☉&lt;/p&gt;`
-            : '&lt;p&gt;Star info not available.&lt;/p&gt;';
+        document.getElementById('star-content').innerHTML = `
+            &lt;p&gt;&lt;b&gt;Name:&lt;/b&gt; ${{starInfo.name}}&lt;/p&gt;
+            &lt;p&gt;&lt;b&gt;Temperature:&lt;/b&gt; ${{starInfo.temp ? starInfo.temp.toFixed(0) : 'Unknown'}} K&lt;/p&gt;
+            &lt;p&gt;&lt;b&gt;Luminosity:&lt;/b&gt; ${{starInfo.luminosity ? starInfo.luminosity.toFixed(2) : 'Unknown'}} L☉&lt;/p&gt;
+        `;
 
         function createTextSprite(text) {{
             const canvas = document.createElement('canvas');
@@ -162,8 +140,8 @@ def get_three_js_html(planets_data, star_info=None):
             ctx.fillText(text, 256, 64);
 
             const texture = new THREE.CanvasTexture(canvas);
-            const spriteMaterial = new THREE.SpriteMaterial({{ map: texture, transparent: true }});
-            const sprite = new THREE.Sprite(spriteMaterial);
+            const spriteMat = new THREE.SpriteMaterial({{ map: texture, transparent: true }});
+            const sprite = new THREE.Sprite(spriteMat);
             sprite.scale.set(30, 8, 1);
             return sprite;
         }}
@@ -228,16 +206,15 @@ def get_three_js_html(planets_data, star_info=None):
             }});
         }});
 
-        // Starfield
-        const starFieldGeom = new THREE.BufferGeometry();
-        const starFieldMat = new THREE.PointsMaterial({{ color: 0xffffff, size: 0.2, transparent: true, opacity: 0.8 }});
+        const starGeom = new THREE.BufferGeometry();
+        const starMat = new THREE.PointsMaterial({{ color: 0xffffff, size: 0.2, transparent: true, opacity: 0.8 }});
         const starVerts = [];
         for (let i = 0; i &lt; 10000; i++) {{
             starVerts.push((Math.random() - 0.5) * 3000, (Math.random() - 0.5) * 3000, (Math.random() - 0.5) * 3000);
         }}
-        starFieldGeom.setAttribute('position', new THREE.Float32BufferAttribute(starVerts, 3));
-        const starField = new THREE.Points(starFieldGeom, starFieldMat);
-        scene.add(starField);
+        starGeom.setAttribute('position', new THREE.Float32BufferAttribute(starVerts, 3));
+        const stars = new THREE.Points(starGeom, starMat);
+        scene.add(stars);
 
         let selectedPlanet = null;
 
@@ -270,13 +247,20 @@ def get_three_js_html(planets_data, star_info=None):
             const data = selectedPlanet.userData.data;
             const infoPanel = document.getElementById('info-panel');
             const infoContent = document.getElementById('info-content');
-            infoContent.innerHTML =
-                `&lt;h3&gt;🪐 ${{data.name}}&lt;/h3&gt;
-                 &lt;p&gt;&lt;b&gt;Radius:&lt;/b&gt; ${{data.radius.toFixed(2)}} R🜨&lt;/p&gt;
-                 &lt;p&gt;&lt;b&gt;Orbit Distance:&lt;/b&gt; ${{data.orbit_radius.toFixed(2)}} AU&lt;/p&gt;
-                 &lt;p&gt;&lt;b&gt;Habitable:&lt;/b&gt; ${{data.is_habitable ? '✅ Yes' : '❌ No'}}&lt;/p&gt;
-                 ${{data.habitability_score !== undefined ? '&lt;p&gt;&lt;b&gt;Habitability Score:&lt;/b&gt; ' + (data.habitability_score*100).toFixed(0) + '%&lt;/p&gt;' : ''}}
-                 ${{data.confidence !== undefined ? '&lt;p&gt;&lt;b&gt;AI Confidence:&lt;/b&gt; ' + (data.confidence*100).toFixed(0) + '%&lt;/p&gt;' : ''}}`;
+            let html = `&lt;h3&gt;🪐 ${{data.name}}&lt;/h3&gt;
+                &lt;p&gt;&lt;b&gt;Radius:&lt;/b&gt; ${{data.radius.toFixed(2)}} R🜨&lt;/p&gt;
+                &lt;p&gt;&lt;b&gt;Orbit Distance:&lt;/b&gt; ${{data.orbit_radius.toFixed(2)}} AU&lt;/p&gt;
+                &lt;p&gt;&lt;b&gt;Habitable:&lt;/b&gt; ${{data.is_habitable ? '✅ Yes' : '❌ No'}}&lt;/p&gt;`;
+            
+            if (data.habitability_score !== undefined) {{
+                html += `&lt;p&gt;&lt;b&gt;Habitability Score:&lt;/b&gt; ${{(data.habitability_score*100).toFixed(0)}}%&lt;/p&gt;`;
+            }}
+            
+            if (data.confidence !== undefined) {{
+                html += `&lt;p&gt;&lt;b&gt;AI Confidence:&lt;/b&gt; ${{(data.confidence*100).toFixed(0)}}%&lt;/p&gt;`;
+            }}
+            
+            infoContent.innerHTML = html;
             infoPanel.style.display = 'block';
         }}
 
@@ -316,5 +300,4 @@ def get_three_js_html(planets_data, star_info=None):
         animate();
     &lt;/script&gt;
 &lt;/body&gt;
-&lt;/html&gt;
-""".strip()
+&lt;/html&gt;"""
