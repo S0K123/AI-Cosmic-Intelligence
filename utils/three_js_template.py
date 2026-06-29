@@ -12,15 +12,31 @@ def get_three_js_html(planets_data, star_info=None):
     star_info_data = star_info or {"name": "Host Star", "temp": 5778, "luminosity": 1.0}
     star_json = json.dumps(star_info_data)
 
-    return f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Cosmos 3D Simulation</title>
-    <style>
-        html, body {{ margin: 0; padding: 0; width: 100%; height: 100%; background-color: #000; overflow: hidden; font-family: Arial, sans-serif; }}
-        canvas {{ width: 100%; height: 100%; display: block; }}
+    return f"""&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;AI Cosmos 3D Simulation&lt;/title&gt;
+    &lt;style&gt;
+        html, body {{
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }}
+        #three-container {{
+            width: 100%;
+            height: 100%;
+        }}
+        canvas {{
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+        }}
         #info-panel {{
             position: absolute;
             top: 10px;
@@ -35,8 +51,15 @@ def get_three_js_html(planets_data, star_info=None):
             display: none;
             z-index: 100;
         }}
-        #info-panel h3 {{ margin: 0 0 12px 0; color: #00d4ff; }}
-        #info-panel p {{ margin: 6px 0; font-size: 14px; line-height: 1.5; }}
+        #info-panel h3 {{
+            margin: 0 0 12px 0;
+            color: #00d4ff;
+        }}
+        #info-panel p {{
+            margin: 6px 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }}
         #close-info {{
             position: absolute;
             top: 8px;
@@ -61,32 +84,36 @@ def get_three_js_html(planets_data, star_info=None):
             box-shadow: 0 0 20px rgba(255, 204, 51, 0.35);
             z-index: 100;
         }}
-        #star-panel h3 {{ margin: 0 0 12px 0; color: #ffcc33; }}
-    </style>
-</head>
-<body>
-    <div id="container"></div>
-    <div id="info-panel">
-        <button id="close-info">&amp;times;</button>
-        <div id="info-content"></div>
-    </div>
-    <div id="star-panel">
-        <h3>🌟 Host Star Info</h3>
-        <div id="star-content"></div>
-    </div>
+        #star-panel h3 {{
+            margin: 0 0 12px 0;
+            color: #ffcc33;
+        }}
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id="three-container"&gt;&lt;/div&gt;
+    &lt;div id="info-panel"&gt;
+        &lt;button id="close-info"&gt;&amp;times;&lt;/button&gt;
+        &lt;div id="info-content"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div id="star-panel"&gt;
+        &lt;h3&gt;🌟 Host Star Info&lt;/h3&gt;
+        &lt;div id="star-content"&gt;&lt;/div&gt;
+    &lt;/div&gt;
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script>
+    &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"&gt;&lt;/script&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"&gt;&lt;/script&gt;
+    &lt;script&gt;
         const planetsData = {planets_json};
         const starInfo = {star_json};
 
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 5000);
+        const container = document.getElementById('three-container');
+        const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 5000);
         const renderer = new THREE.WebGLRenderer({{ antialias: true, alpha: true }});
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(container.clientWidth, container.clientHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
-        document.getElementById('container').appendChild(renderer.domElement);
+        container.appendChild(renderer.domElement);
 
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
@@ -292,9 +319,9 @@ def get_three_js_html(planets_data, star_info=None):
         }}
 
         window.addEventListener('resize', () =&gt; {{
-            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.aspect = container.clientWidth / container.clientHeight;
             camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setSize(container.clientWidth, container.clientHeight);
         }});
 
         animate();
