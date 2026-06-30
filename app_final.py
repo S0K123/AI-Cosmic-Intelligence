@@ -36,7 +36,7 @@ st.set_page_config(
 
 # --- NASA-inspired Dark Theme CSS ---
 st.markdown("""
-&lt;style&gt;
+    <style>
     .main {
         background-color: #0a0e17;
         color: #e0e6ed;
@@ -58,7 +58,7 @@ st.markdown("""
         color: #00d4ff;
         font-family: 'Segoe UI', sans-serif;
     }
-    .stButton &gt; button {
+    .stButton > button {
         background: linear-gradient(90deg, #00d4ff, #0ea5e9);
         color: #0a0e17;
         font-weight: 700;
@@ -66,7 +66,7 @@ st.markdown("""
         border: none;
         box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
     }
-    .stButton &gt; button:hover {
+    .stButton > button:hover {
         box-shadow: 0 6px 20px rgba(0, 212, 255, 0.5);
         transform: translateY(-1px);
     }
@@ -77,7 +77,7 @@ st.markdown("""
     .css-1d391kg {
         padding-top: 1rem;
     }
-&lt;/style&gt;
+    </style>
 """, unsafe_allow_html=True)
 
 
